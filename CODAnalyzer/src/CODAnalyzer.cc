@@ -23,13 +23,14 @@
 
 #include "FWCore/Framework/interface/ESHandle.h"
 
-#include "DataFormats/JetReco/interface/PFJet.h"
-#include "DataFormats/JetReco/interface/GenJet.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 
-#include "DataFormats/JetReco/interface/GenJetCollection.h"
-#include "DataFormats/JetReco/interface/PFJetCollection.h"
+#include "DataFormats/EgammaCandidates/interface/Photon.h"
+#include "DataFormats/PatCandidates/interface/Photon.h"
+
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
 
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 
@@ -56,11 +57,6 @@
 CODAnalyzer::CODAnalyzer(const edm::ParameterSet& iConfig)
 
 {
-
-   nPhotonMax = 4;
-   nPartonMax = 10;
-   nPFCandMax = 500;
-   nCaloTowerMax = 2000;
    
 
 }
@@ -98,6 +94,21 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    Handle<std::vector<PileupSummaryInfo>> pupInfo;
    iEvent.getByLabel("addPileupInfo", pupInfo);
 
+   Handle<PhotonCollection> photons_h;
+   iEvent.getByLabel( "photons", photons_h);
+   const PhotonCollection* photons = photons_h.product();
+
+   //edm::EDGetTokenT<EcalRecHitCollection> ebReducedRecHitCollection_;
+   //ebReducedRecHitCollection_        = mayConsume<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>
+
+   //edm::EDGetTokenT<edm::View<reco::Candidate> > pfCandidatesToken_;
+   //pfCandidatesToken_        = mayConsume< edm::View<reco::Candidate> >(iConfig.getParameter<edm::InputTag>("pfCandidates")); 
+   //edm::Handle< edm::View<reco::Candidate> > pfCandidatesHandle;
+   //iEvent.getByToken(pfCandidatesToken_, pfCandidatesHandle);
+
+
+
+
 
    event =   (int) iEvent.id().event();
    run   =   (int) iEvent.id().run();
@@ -109,8 +120,9 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 
 
+   nPhotons = photons.size();
 
-
+   std::cout << "nPhotons: " << nPhotons << std::endl;
 
   
 
@@ -119,28 +131,28 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 
 
-void CODAnalyzer::computeQGvars( float sum_weight, float sum_pt, float sum_deta, float sum_dphi, float sum_deta2, float sum_dphi2, float sum_detadphi, float& a_axis1, float& a_axis2, float& a_ptD ) {
-
-  float a = 0., b = 0., c = 0.;
-  float ave_deta = 0., ave_dphi = 0., ave_deta2 = 0., ave_dphi2 = 0.;
-  if(sum_weight > 0){
-    ave_deta  = sum_deta/sum_weight;
-    ave_dphi  = sum_dphi/sum_weight;
-    ave_deta2 = sum_deta2/sum_weight;
-    ave_dphi2 = sum_dphi2/sum_weight;
-    a         = ave_deta2 - ave_deta*ave_deta;                          
-    b         = ave_dphi2 - ave_dphi*ave_dphi;                          
-    c         = -(sum_detadphi/sum_weight - ave_deta*ave_dphi);                
-  }
-  float delta = sqrt(fabs((a-b)*(a-b)+4*c*c));
-  a_axis2 = (a+b-delta > 0 ?  sqrt(0.5*(a+b-delta)) : 0);
-  a_axis1 = (a+b+delta > 0 ?  sqrt(0.5*(a+b+delta)) : 0);
-  a_ptD   = (sum_weight > 0 ? sqrt(sum_weight)/sum_pt : 0);
-
-  a_axis2 = -log(a_axis2);
-  a_axis1 = -log(a_axis1);
-
-}
+//void CODAnalyzer::computeQGvars( float sum_weight, float sum_pt, float sum_deta, float sum_dphi, float sum_deta2, float sum_dphi2, float sum_detadphi, float& a_axis1, float& a_axis2, float& a_ptD ) {
+//
+//  float a = 0., b = 0., c = 0.;
+//  float ave_deta = 0., ave_dphi = 0., ave_deta2 = 0., ave_dphi2 = 0.;
+//  if(sum_weight > 0){
+//    ave_deta  = sum_deta/sum_weight;
+//    ave_dphi  = sum_dphi/sum_weight;
+//    ave_deta2 = sum_deta2/sum_weight;
+//    ave_dphi2 = sum_dphi2/sum_weight;
+//    a         = ave_deta2 - ave_deta*ave_deta;                          
+//    b         = ave_dphi2 - ave_dphi*ave_dphi;                          
+//    c         = -(sum_detadphi/sum_weight - ave_deta*ave_dphi);                
+//  }
+//  float delta = sqrt(fabs((a-b)*(a-b)+4*c*c));
+//  a_axis2 = (a+b-delta > 0 ?  sqrt(0.5*(a+b-delta)) : 0);
+//  a_axis1 = (a+b+delta > 0 ?  sqrt(0.5*(a+b+delta)) : 0);
+//  a_ptD   = (sum_weight > 0 ? sqrt(sum_weight)/sum_pt : 0);
+//
+//  a_axis2 = -log(a_axis2);
+//  a_axis1 = -log(a_axis1);
+//
+//}
 
 
 int CODAnalyzer::getPileUp( edm::Handle<std::vector<PileupSummaryInfo>>& pupInfo ) {
@@ -154,14 +166,14 @@ int CODAnalyzer::getPileUp( edm::Handle<std::vector<PileupSummaryInfo>>& pupInfo
 } 
 
 
-float CODAnalyzer::computeTau21( const std::vector< fastjet::PseudoJet >& newparts ) {
- 
-  fastjet::ClusterSequenceArea* thisClustering = new fastjet::ClusterSequenceArea(newparts, *jetDef, *fjAreaDefinition);
-  std::vector<fastjet::PseudoJet> out_jets = sorted_by_pt(thisClustering->inclusive_jets(0.01));        
-      
-  return (*nSub2KT)(out_jets[0])/(*nSub1KT)(out_jets[0]);
-
-}
+//float CODAnalyzer::computeTau21( const std::vector< fastjet::PseudoJet >& newparts ) {
+// 
+//  fastjet::ClusterSequenceArea* thisClustering = new fastjet::ClusterSequenceArea(newparts, *jetDef, *fjAreaDefinition);
+//  std::vector<fastjet::PseudoJet> out_jets = sorted_by_pt(thisClustering->inclusive_jets(0.01));        
+//      
+//  return (*nSub2KT)(out_jets[0])/(*nSub1KT)(out_jets[0]);
+//
+//}
 
 
 //reco::GenParticleCollection::const_iterator CODAnalyzer::getMatchedGenParticle(const TLorentzVector& jet, edm::Handle<reco::GenParticleCollection>& genParticles ) {
@@ -204,31 +216,44 @@ CODAnalyzer::beginJob()
   tree->Branch("rho"   , &rho  , "rho/F");
   tree->Branch("nVert" , &nVert, "nVert/I");
   tree->Branch("nPU"   , &nPU  , "nPU/I");
-  tree->Branch("pt"    , &pt   , "pt/F");
-  tree->Branch("eta"   , &eta  , "eta/F");
-  tree->Branch("phi"   , &phi  , "phi/F");
-  tree->Branch("mass"  , &mass , "mass/F");
-  tree->Branch("axis1" , &axis1, "axis1/F");
-  tree->Branch("axis2" , &axis2, "axis2/F");
-  tree->Branch("ptD"   , &ptD  , "ptD/F");
-  tree->Branch("tau21" , &tau21, "tau21/F");
-  tree->Branch("ptGen"    , &ptGen   , "ptGen/F");
-  tree->Branch("etaGen"   , &etaGen  , "etaGen/F");
-  tree->Branch("phiGen"   , &phiGen  , "phiGen/F");
-  tree->Branch("massGen"  , &massGen , "massGen/F");
-  tree->Branch("axis1Gen" , &axis1Gen, "axis1Gen/F");
-  tree->Branch("axis2Gen" , &axis2Gen, "axis2Gen/F");
-  tree->Branch("ptDGen"   , &ptDGen  , "ptDGen/F");
-  tree->Branch("tau21Gen" , &tau21Gen, "tau21Gen/F");
-  tree->Branch("btag"  , &btag , "btag/F");
-  tree->Branch("partonId"  , &partonId , "partonId/I");
-  tree->Branch("jetIdLevel"  , &jetIdLevel , "jetIdLevel/I");
-  tree->Branch("pixelSize", &pixelSize, "pixelSize/F");
-  tree->Branch("drMax", &drMax, "drMax/F");
-  tree->Branch("nPix", &nPix, "nPix/I");
-  tree->Branch("jetImageReco",jetImageReco, "jetImageReco[nPix]/F");
-  tree->Branch("jetImageGen" ,jetImageGen , "jetImageGen[nPix]/F");
-  tree->Branch("frac_pt" , &frac_pt , "frac_pt/F");
+
+  tree->Branch("nPhoton"  , &nPhoton , "nPhoton/I" );
+  tree->Branch("pt_phot"  , pt_phot  , "pt_phot[nPhotonMax]/F");
+  tree->Branch("eta_phot" , eta_phot , "eta_phot[nPhotonMax]/F");
+  tree->Branch("phi_phot" , phi_phot , "phi_phot[nPhotonMax]/F");
+  tree->Branch("eRaw_phot", eRaw_phot, "eRaw_phot[nPhotonMax]/F");
+  tree->Branch("eSC_phot" , eSC_phot , "eSC_phot[nPhotonMax]/F");
+
+  //tree->Branch(e1x5_phot[nPhotonMax];
+  //tree->Branch(e2x5_phot[nPhotonMax];
+  //tree->Branch(e3x3_phot[nPhotonMax];
+  //tree->Branch(e5x5_phot[nPhotonMax];
+  //tree->Branch(maxEnergyXtal_phot[nPhotonMax];
+  //tree->Branch(sigmaEtaEta_phot[nPhotonMax];
+  //tree->Branch(sigmaIetaIeta_phot[nPhotonMax];
+  //tree->Branch(sigmaIphiIphi_phot[nPhotonMax];
+  //tree->Branch(r1x5_phot[nPhotonMax];
+  //tree->Branch(r2x5_phot[nPhotonMax];
+  //tree->Branch(r9_phot[nPhotonMax];
+
+  //tree->Branch(full5x5_e1x5_phot[nPhotonMax];
+  //tree->Branch(full5x5_e2x5_phot[nPhotonMax];
+  //tree->Branch(full5x5_e3x3_phot[nPhotonMax];
+  //tree->Branch(full5x5_e5x5_phot[nPhotonMax];
+  //tree->Branch(full5x5_maxEnergyXtal_phot[nPhotonMax];
+  //tree->Branch(full5x5_sigmaEtaEta_phot[nPhotonMax];
+  //tree->Branch(full5x5_sigmaIetaIeta_phot[nPhotonMax];
+  //tree->Branch(full5x5_sigmaIphiIphi_phot[nPhotonMax];
+  //tree->Branch(full5x5_r1x5_phot[nPhotonMax];
+  //tree->Branch(full5x5_r2x5_phot[nPhotonMax];
+  //tree->Branch(full5x5_r9_phot[nPhotonMax];
+
+  //tree->Branch(hOverE_phot  [nPhotonMax];
+  //tree->Branch(chIso_phot  [nPhotonMax];
+  //tree->Branch(nhIso_phot  [nPhotonMax];
+  //tree->Branch(phIso_phot  [nPhotonMax];
+  //tree->Branch(convSafeEleVeto_phot  [nPhotonMax];
+  //tree->Branch(pixelSeedVeto_phot  [nPhotonMax];
 
 
 

@@ -74,6 +74,11 @@ class CODAnalyzer : public edm::EDAnalyzer {
 
       float ecalRecHits[61000];
 
+      const int nPhotonMax = 5;
+      const int nPartonMax = 10;
+      const int nPFCandMax = 500;
+      const int nCaloTowerMax = 2000;
+
       int nPhoton;
       float pt_phot   [nPhotonMax];
       float eta_phot  [nPhotonMax];
