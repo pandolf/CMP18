@@ -30,7 +30,11 @@
 
 
 
-#define nIMGMAX 99999
+#define NPHOTONMAX 6
+#define NPARTONMAX 10
+#define NPFCANDMAX 500
+#define NCALOTOWERMAX 2000
+
 
 class TTree;
 class PileupSummaryInfo;
@@ -57,9 +61,9 @@ class CODAnalyzer : public edm::EDAnalyzer {
       virtual void beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&);
       virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&);
 
-      void fillImage( float ptRatio, float dEta, float dPhi, int nPix_1D, float pixelSize, float* image );
-      void computeQGvars( float sum_weight, float sum_pt, float sum_deta, float sum_dphi, float sum_deta2, float sum_dphi2, float sum_detadphi, float& a_axis1, float& a_axis2, float& a_ptD );
-      float computeTau21( const std::vector< fastjet::PseudoJet >& newparts );
+      //void fillImage( float ptRatio, float dEta, float dPhi, int nPix_1D, float pixelSize, float* image );
+      //void computeQGvars( float sum_weight, float sum_pt, float sum_deta, float sum_dphi, float sum_deta2, float sum_dphi2, float sum_detadphi, float& a_axis1, float& a_axis2, float& a_ptD );
+      //float computeTau21( const std::vector< fastjet::PseudoJet >& newparts );
       int getPileUp( edm::Handle<std::vector<PileupSummaryInfo>>& pupInfo );
 
 
@@ -74,71 +78,67 @@ class CODAnalyzer : public edm::EDAnalyzer {
 
       float ecalRecHits[61000];
 
-      const int nPhotonMax = 5;
-      const int nPartonMax = 10;
-      const int nPFCandMax = 500;
-      const int nCaloTowerMax = 2000;
 
       int nPhoton;
-      float pt_phot   [nPhotonMax];
-      float eta_phot  [nPhotonMax];
-      float phi_phot  [nPhotonMax];
-      float eRaw_phot [nPhotonMax];
-      float eSC_phot  [nPhotonMax];
+      float pt_phot  [NPHOTONMAX];
+      float eta_phot [NPHOTONMAX];
+      float phi_phot [NPHOTONMAX];
+      float eRaw_phot[NPHOTONMAX];
+      float eSC_phot [NPHOTONMAX];
 
-      float e1x5_phot[nPhotonMax];
-      float e2x5_phot[nPhotonMax];
-      float e3x3_phot[nPhotonMax];
-      float e5x5_phot[nPhotonMax];
-      float maxEnergyXtal_phot[nPhotonMax];
-      float sigmaEtaEta_phot[nPhotonMax];
-      float sigmaIetaIeta_phot[nPhotonMax];
-      float sigmaIphiIphi_phot[nPhotonMax];
-      float r1x5_phot[nPhotonMax];
-      float r2x5_phot[nPhotonMax];
-      float r9_phot[nPhotonMax];
+      float e1x5_phot[NPHOTONMAX];
+      float e2x5_phot[NPHOTONMAX];
+      float e3x3_phot[NPHOTONMAX];
+      float e5x5_phot[NPHOTONMAX];
+      float maxEnergyXtal_phot[NPHOTONMAX];
+      float sigmaEtaEta_phot[NPHOTONMAX];
+      float sigmaIetaIeta_phot[NPHOTONMAX];
+      float r1x5_phot[NPHOTONMAX];
+      float r2x5_phot[NPHOTONMAX];
+      float r9_phot[NPHOTONMAX];
 
-      float full5x5_e1x5_phot[nPhotonMax];
-      float full5x5_e2x5_phot[nPhotonMax];
-      float full5x5_e3x3_phot[nPhotonMax];
-      float full5x5_e5x5_phot[nPhotonMax];
-      float full5x5_maxEnergyXtal_phot[nPhotonMax];
-      float full5x5_sigmaEtaEta_phot[nPhotonMax];
-      float full5x5_sigmaIetaIeta_phot[nPhotonMax];
-      float full5x5_sigmaIphiIphi_phot[nPhotonMax];
-      float full5x5_r1x5_phot[nPhotonMax];
-      float full5x5_r2x5_phot[nPhotonMax];
-      float full5x5_r9_phot[nPhotonMax];
+      //float full5x5_e1x5_phot[NPHOTONMAX];
+      //float full5x5_e2x5_phot[NPHOTONMAX];
+      //float full5x5_e3x3_phot[NPHOTONMAX];
+      //float full5x5_e5x5_phot[NPHOTONMAX];
+      //float full5x5_maxEnergyXtal_phot[NPHOTONMAX];
+      //float full5x5_sigmaEtaEta_phot[NPHOTONMAX];
+      //float full5x5_sigmaIetaIeta_phot[NPHOTONMAX];
+      //float full5x5_sigmaIphiIphi_phot[NPHOTONMAX];
+      //float full5x5_r1x5_phot[NPHOTONMAX];
+      //float full5x5_r2x5_phot[NPHOTONMAX];
+      //float full5x5_r9_phot[NPHOTONMAX];
 
-      float hOverE_phot  [nPhotonMax];
-      float chIso_phot  [nPhotonMax];
-      float nhIso_phot  [nPhotonMax];
-      float phIso_phot  [nPhotonMax];
-      float convSafeEleVeto_phot  [nPhotonMax];
-      float pixelSeedVeto_phot  [nPhotonMax];
+      float hOverE_phot  [NPHOTONMAX];
+      float hTowOverE_phot  [NPHOTONMAX];
+      float chIso_phot  [NPHOTONMAX];
+      float nhIso_phot  [NPHOTONMAX];
+      float phIso_phot  [NPHOTONMAX];
+      float convSafeEleVeto_phot  [NPHOTONMAX];
+      float pixelSeedVeto_phot  [NPHOTONMAX];
 
 
       int nParton;
-      float pt_parton   [nPartonMax];
-      float eta_parton  [nPartonMax];
-      float phi_parton  [nPartonMax];
-      float mass_parton [nPartonMax];
-      int   pdgId_parton[nPartonMax];
+      float pt_parton   [NPARTONMAX];
+      float eta_parton  [NPARTONMAX];
+      float phi_parton  [NPARTONMAX];
+      float mass_parton [NPARTONMAX];
+      int   pdgId_parton[NPARTONMAX];
    
 
       int nPFCand;
-      float pt_pfCand   [nPFCandMax];
-      float eta_pfCand  [nPFCandMax];
-      float phi_pfCand  [nPFCandMax];
-      float mass_pfCand [nPFCandMax];
-      int   pdgId_pfCand[nPFCandMax];
+      float pt_pfCand   [NPFCANDMAX];
+      float eta_pfCand  [NPFCANDMAX];
+      float phi_pfCand  [NPFCANDMAX];
+      float mass_pfCand [NPFCANDMAX];
+      int   pdgId_pfCand[NPFCANDMAX];
 
       int nCaloTower;
-      float pt_caloTower   [nCaloTowerMax];
-      float eta_caloTower  [nCaloTowerMax];
-      float phi_caloTower  [nCaloTowerMax];
-      float mass_caloTower [nCaloTowerMax];
-      float emf_caloTower  [nCaloTowerMax];
+      float pt_caloTower   [NCALOTOWERMAX];
+      float eta_caloTower  [NCALOTOWERMAX];
+      float phi_caloTower  [NCALOTOWERMAX];
+      float mass_caloTower [NCALOTOWERMAX];
+      float emf_caloTower  [NCALOTOWERMAX];
 
 
 
