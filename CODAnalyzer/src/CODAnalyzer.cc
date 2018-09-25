@@ -156,11 +156,29 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
       hOverE_phot[iPhot]  = photons->at(iPhot).hadronicOverEm();
       hTowOverE_phot[iPhot]  = photons->at(iPhot).hadTowOverEm();
-      chIso_phot[iPhot] = photons->at(iPhot).chargedHadronIso();
-      nhIso_phot[iPhot] = photons->at(iPhot).neutralHadronIso();
-      phIso_phot[iPhot] = photons->at(iPhot).photonIso();
+
+      ecalRecHitSumEtConeDR04_phot[iPhot] = photons->at(iPhot).ecalRecHitSumEtConeDR04();
+      hcalTowerSumEtConeDR04_phot[iPhot] = photons->at(iPhot).hcalTowerSumEtConeDR04();
+      hcalTowerSumEtBcConeDR04_phot[iPhot] = photons->at(iPhot).hcalTowerSumEtBcConeDR04();
+      trkSumPtSolidConeDR04_phot[iPhot] = photons->at(iPhot).trkSumPtSolidConeDR04();
+      trkSumPtHollowConeDR04_phot[iPhot] = photons->at(iPhot).trkSumPtHollowConeDR04();
+      nTrkSolidConeDR04_phot[iPhot] = photons->at(iPhot).nTrkSolidConeDR04();
+      nTrkHollowConeDR04_phot[iPhot] = photons->at(iPhot).nTrkHollowConeDR04();
+
+      ecalRecHitSumEtConeDR03_phot[iPhot] = photons->at(iPhot).ecalRecHitSumEtConeDR03();
+      hcalTowerSumEtConeDR03_phot[iPhot] = photons->at(iPhot).hcalTowerSumEtConeDR03();
+      hcalTowerSumEtBcConeDR03_phot[iPhot] = photons->at(iPhot).hcalTowerSumEtBcConeDR03();
+      trkSumPtSolidConeDR03_phot[iPhot] = photons->at(iPhot).trkSumPtSolidConeDR03();
+      trkSumPtHollowConeDR03_phot[iPhot] = photons->at(iPhot).trkSumPtHollowConeDR03();
+      nTrkSolidConeDR03_phot[iPhot] = photons->at(iPhot).nTrkSolidConeDR03();
+      nTrkHollowConeDR03_phot[iPhot] = photons->at(iPhot).nTrkHollowConeDR03();
+
+      chIsoPF_phot[iPhot] = photons->at(iPhot).chargedHadronIso();
+      nhIsoPF_phot[iPhot] = photons->at(iPhot).neutralHadronIso();
+      phIsoPF_phot[iPhot] = photons->at(iPhot).photonIso();
+      
       //convSafeEleVeto_phot = photons[i]->
-      //pixelSeedVeto_phot = photons[i]->
+      hasPixelSeed_phot[iPhot] = photons->at(iPhot).hasPixelSeed();
      
    } // for photons
   
@@ -245,11 +263,6 @@ CODAnalyzer::beginJob()
 {
 
 
-  //file = TFile::Open("CODAnalyzer.root", "recreate" );
-  //file->cd();
-
-  //tree = new TTree( "CODAnalyzer", "" );
-
   tree = fs->make<TTree>("CODAnalyzer","CODAnalyzer");
   tree->Branch("event" , &event, "event/I");
   tree->Branch("run"   , &run  , "run/I");
@@ -290,9 +303,9 @@ CODAnalyzer::beginJob()
 
   tree->Branch("hOverE_phot" , hOverE_phot , "hOverE_phot[nPhoton]/F");
   tree->Branch("hTowOverE_phot" , hTowOverE_phot , "hTowOverE_phot[nPhoton]/F");
-  tree->Branch("chIso_phot" , chIso_phot , "chIso_phot[nPhoton]/F");
-  tree->Branch("nhIso_phot" , nhIso_phot , "nhIso_phot[nPhoton]/F");
-  tree->Branch("phIso_phot" , phIso_phot , "phIso_phot[nPhoton]/F");
+  tree->Branch("chIsoPF_phot" , chIsoPF_phot , "chIsoPF_phot[nPhoton]/F");
+  tree->Branch("nhIsoPF_phot" , nhIsoPF_phot , "nhIsoPF_phot[nPhoton]/F");
+  tree->Branch("phIsoPF_phot" , phIsoPF_phot , "phIsoPF_phot[nPhoton]/F");
 
   //tree->Branch("eSC_phot" , eSC_phot , "eSC_phot[nPhoton]/F");
   //tree->Branch("eSC_phot" , eSC_phot , "eSC_phot[nPhoton]/F");
@@ -302,7 +315,7 @@ CODAnalyzer::beginJob()
   //tree->Branch(nhIso_phot  [nPhoton];
   //tree->Branch(phIso_phot  [nPhoton];
   //tree->Branch(convSafeEleVeto_phot  [nPhoton];
-  //tree->Branch(pixelSeedVeto_phot  [nPhoton];
+  tree->Branch("hasPixelSeed_phot" , hasPixelSeed_phot , "hasPixelSeed_phot[nPhoton]/O");
 
 
 

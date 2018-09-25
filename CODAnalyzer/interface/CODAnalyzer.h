@@ -97,6 +97,22 @@ class CODAnalyzer : public edm::EDAnalyzer {
       float r2x5_phot[NPHOTONMAX];
       float r9_phot[NPHOTONMAX];
 
+      float ecalRecHitSumEtConeDR04_phot[NPHOTONMAX];
+      float hcalTowerSumEtConeDR04_phot[NPHOTONMAX];
+      float hcalTowerSumEtBcConeDR04_phot[NPHOTONMAX];
+      float trkSumPtSolidConeDR04_phot[NPHOTONMAX];
+      float trkSumPtHollowConeDR04_phot[NPHOTONMAX];
+      int   nTrkSolidConeDR04_phot[NPHOTONMAX];
+      int   nTrkHollowConeDR04_phot[NPHOTONMAX];
+
+      float ecalRecHitSumEtConeDR03_phot[NPHOTONMAX];
+      float hcalTowerSumEtConeDR03_phot[NPHOTONMAX];
+      float hcalTowerSumEtBcConeDR03_phot[NPHOTONMAX];
+      float trkSumPtSolidConeDR03_phot[NPHOTONMAX];
+      float trkSumPtHollowConeDR03_phot[NPHOTONMAX];
+      int   nTrkSolidConeDR03_phot[NPHOTONMAX];
+      int   nTrkHollowConeDR03_phot[NPHOTONMAX];
+
       //float full5x5_e1x5_phot[NPHOTONMAX];
       //float full5x5_e2x5_phot[NPHOTONMAX];
       //float full5x5_e3x3_phot[NPHOTONMAX];
@@ -111,11 +127,12 @@ class CODAnalyzer : public edm::EDAnalyzer {
 
       float hOverE_phot  [NPHOTONMAX];
       float hTowOverE_phot  [NPHOTONMAX];
-      float chIso_phot  [NPHOTONMAX];
-      float nhIso_phot  [NPHOTONMAX];
-      float phIso_phot  [NPHOTONMAX];
-      float convSafeEleVeto_phot  [NPHOTONMAX];
-      float pixelSeedVeto_phot  [NPHOTONMAX];
+      float chIsoPF_phot  [NPHOTONMAX];
+      float nhIsoPF_phot  [NPHOTONMAX];
+      float phIsoPF_phot  [NPHOTONMAX];
+
+      //float convSafeEleVeto_phot  [NPHOTONMAX];
+      bool hasPixelSeed_phot  [NPHOTONMAX];
 
 
       int nParton;
