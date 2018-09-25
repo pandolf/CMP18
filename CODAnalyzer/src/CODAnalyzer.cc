@@ -26,6 +26,9 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+#include "DataFormats/EcalDetId/interface/EBDetId.h"
+
 #include "DataFormats/EgammaCandidates/interface/Photon.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
 
@@ -98,6 +101,10 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    iEvent.getByLabel( "photons", photons_h);
    const PhotonCollection* photons = photons_h.product();
 
+   Handle< EcalRecHitCollection > ebReducedRecHitCollection_h;
+   iEvent.getByLabel( "reducedEcalRecHitsEB", ebReducedRecHitCollection_h);
+   const EcalRecHitCollection* ebRecHits = ebReducedRecHitCollection_h.product();
+
    //edm::EDGetTokenT<EcalRecHitCollection> ebReducedRecHitCollection_;
    //ebReducedRecHitCollection_        = mayConsume<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>
 
@@ -107,7 +114,10 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    //iEvent.getByToken(pfCandidatesToken_, pfCandidatesHandle);
 
 
-
+   // initialize:
+   for( int i=0; i<NECALRECHITMAX; ++i ) {
+     energy_ecalRecHit[i] = 0.;
+   }
 
 
    event =   (int) iEvent.id().event();
@@ -183,6 +193,27 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    } // for photons
   
 
+
+  nEcalRecHit = ebRecHits->size();
+
+  //int irechit_ind=0;
+
+  //for( EcalRecHitCollection::const_iterator iRecHit = ebRecHits->begin(); iRecHit != ebRecHits->end(); ++iRecHit ) {
+
+  //  //std::cout << "rawid: " << iRecHit->id().rawId() << " det: " << iRecHit->id().det() << " subdetId: " << iRecHit->id().subdetId() << " energy: " << iRecHit->energy() << std::endl;
+  //  EBDetId edDetId(iRecHit->id());
+  //  
+  //  //iEta_ecalRecHit[irechit_ind] = edDetId.ieta();
+  //  //iPhi_ecalRecHit[irechit_ind] = edDetId.iphi();
+  //  //energy_ecalRecHit[irechit_ind] = iRecHit->energy();
+
+  //  std::cout << irechit_ind << std::endl;
+  //  irechit_ind++;
+  //  //std::cout << "iEta: " << edDetId.ieta() << " energy: " << iRecHit->energy() << std::endl;
+
+  //}  // for recHits
+
+std::cout << "jjj3" << std::endl;
   tree->Fill();
 
 }
@@ -326,6 +357,10 @@ CODAnalyzer::beginJob()
 
   tree->Branch("hasPixelSeed_phot" , hasPixelSeed_phot , "hasPixelSeed_phot[nPhoton]/O");
 
+  tree->Branch("nEcalRecHit" , &nEcalRecHit , "nEcalRecHit/I");
+  //tree->Branch("iPhi_ecalRecHit" , iPhi_ecalRecHit , "iPhi_ecalRecHit[nEcalRecHit]/I");
+  //tree->Branch("iEta_ecalRecHit" , iEta_ecalRecHit , "iEta_ecalRecHit[nEcalRecHit]/I");
+  tree->Branch("energy_ecalRecHit" , energy_ecalRecHit , "energy_ecalRecHit[nEcalRecHit]/F");
 
 
 }

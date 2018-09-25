@@ -33,7 +33,8 @@
 #define NPHOTONMAX 6
 #define NPARTONMAX 10
 #define NPFCANDMAX 500
-#define NCALOTOWERMAX 2000
+#define NCALOTOWERMAX 4000
+#define NECALRECHITMAX 2000
 
 
 class TTree;
@@ -69,14 +70,16 @@ class CODAnalyzer : public edm::EDAnalyzer {
 
       // ----------member data ---------------------------
 
-      //const JetCorrector *JEC;
       edm::Service<TFileService> fs;
       TTree* tree;
 
       float rho;
       int event, run, lumi, nVert, nPU;
 
-      float ecalRecHits[61000];
+      float nEcalRecHit;
+      int iEta_ecalRecHit[NECALRECHITMAX];
+      int iPhi_ecalRecHit[NECALRECHITMAX];
+      float energy_ecalRecHit[NECALRECHITMAX];
 
 
       int nPhoton;
