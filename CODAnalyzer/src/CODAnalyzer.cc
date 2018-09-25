@@ -303,18 +303,27 @@ CODAnalyzer::beginJob()
 
   tree->Branch("hOverE_phot" , hOverE_phot , "hOverE_phot[nPhoton]/F");
   tree->Branch("hTowOverE_phot" , hTowOverE_phot , "hTowOverE_phot[nPhoton]/F");
+
+  tree->Branch("ecalRecHitSumEtConeDR04_phot" , ecalRecHitSumEtConeDR04_phot , "ecalRecHitSumEtConeDR04_phot[nPhoton]/F");
+  tree->Branch("hcalTowerSumEtConeDR04_phot" , hcalTowerSumEtConeDR04_phot , "hcalTowerSumEtConeDR04_phot[nPhoton]/F");
+  tree->Branch("hcalTowerSumEtBcConeDR04_phot" , hcalTowerSumEtBcConeDR04_phot , "hcalTowerSumEtBcConeDR04_phot[nPhoton]/F");
+  tree->Branch("trkSumPtSolidConeDR04_phot" , trkSumPtSolidConeDR04_phot , "trkSumPtSolidConeDR04_phot[nPhoton]/F");
+  tree->Branch("trkSumPtHollowConeDR04_phot" , trkSumPtHollowConeDR04_phot , "trkSumPtHollowConeDR04_phot[nPhoton]/F");
+  tree->Branch("nTrkSolidConeDR04_phot" , nTrkSolidConeDR04_phot , "nTrkSolidConeDR04_phot[nPhoton]/I");
+  tree->Branch("nTrkHollowConeDR04_phot" , nTrkHollowConeDR04_phot , "nTrkHollowConeDR04_phot[nPhoton]/I");
+
+  tree->Branch("ecalRecHitSumEtConeDR03_phot" , ecalRecHitSumEtConeDR03_phot , "ecalRecHitSumEtConeDR03_phot[nPhoton]/F");
+  tree->Branch("hcalTowerSumEtConeDR03_phot" , hcalTowerSumEtConeDR03_phot , "hcalTowerSumEtConeDR03_phot[nPhoton]/F");
+  tree->Branch("hcalTowerSumEtBcConeDR03_phot" , hcalTowerSumEtBcConeDR03_phot , "hcalTowerSumEtBcConeDR03_phot[nPhoton]/F");
+  tree->Branch("trkSumPtSolidConeDR03_phot" , trkSumPtSolidConeDR03_phot , "trkSumPtSolidConeDR03_phot[nPhoton]/F");
+  tree->Branch("trkSumPtHollowConeDR03_phot" , trkSumPtHollowConeDR03_phot , "trkSumPtHollowConeDR03_phot[nPhoton]/F");
+  tree->Branch("nTrkSolidConeDR03_phot" , nTrkSolidConeDR03_phot , "nTrkSolidConeDR03_phot[nPhoton]/I");
+  tree->Branch("nTrkHollowConeDR03_phot" , nTrkHollowConeDR03_phot , "nTrkHollowConeDR03_phot[nPhoton]/I");
+
   tree->Branch("chIsoPF_phot" , chIsoPF_phot , "chIsoPF_phot[nPhoton]/F");
   tree->Branch("nhIsoPF_phot" , nhIsoPF_phot , "nhIsoPF_phot[nPhoton]/F");
   tree->Branch("phIsoPF_phot" , phIsoPF_phot , "phIsoPF_phot[nPhoton]/F");
 
-  //tree->Branch("eSC_phot" , eSC_phot , "eSC_phot[nPhoton]/F");
-  //tree->Branch("eSC_phot" , eSC_phot , "eSC_phot[nPhoton]/F");
-  //tree->Branch(hOverE_phot  [nPhoton];
-  //tree->Branch(hTowOverE_phot  [nPhoton];
-  //tree->Branch(chIso_phot  [nPhoton];
-  //tree->Branch(nhIso_phot  [nPhoton];
-  //tree->Branch(phIso_phot  [nPhoton];
-  //tree->Branch(convSafeEleVeto_phot  [nPhoton];
   tree->Branch("hasPixelSeed_phot" , hasPixelSeed_phot , "hasPixelSeed_phot[nPhoton]/O");
 
 
