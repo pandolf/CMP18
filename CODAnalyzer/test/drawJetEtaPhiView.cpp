@@ -33,24 +33,53 @@ int main( int argc, char* argv[] ) {
   tree->SetBranchAddress( "eta_pfCand", eta_pfCand );
   float phi_pfCand[4000];
   tree->SetBranchAddress( "phi_pfCand", phi_pfCand );
-  float mass_pfCand[4000];
-  tree->SetBranchAddress( "mass_pfCand", mass_pfCand );
+  float energy_pfCand[4000];
+  tree->SetBranchAddress( "energy_pfCand", energy_pfCand );
+
+  int nCaloTower;
+  tree->SetBranchAddress( "nCaloTower", &nCaloTower );
+  float pt_caloTower[4000];
+  tree->SetBranchAddress( "pt_caloTower", pt_caloTower );
+  float eta_caloTower[4000];
+  tree->SetBranchAddress( "eta_caloTower", eta_caloTower );
+  float phi_caloTower[4000];
+  tree->SetBranchAddress( "phi_caloTower", phi_caloTower );
+  float energy_caloTower[4000];
+  tree->SetBranchAddress( "energy_caloTower", energy_caloTower );
+
 
   tree->GetEntry(entry);
 
 
-  TH2D* h2_pfEtaPhi = new TH2D( "pfEtaPhi", "",  250, -2.5, 2.5, 360, 0., 360.00001 );
+  TH2D* h2_pfEtaPhi = new TH2D( "pfEtaPhi", "",  250, -2.5, 2.5, 360, -3.1416, 3.1416 );
+  h2_pfEtaPhi->SetXTitle( "Eta" );
+  h2_pfEtaPhi->SetYTitle( "Phi" );
   
 
   for( int i=0; i<nPFCand; ++i ) {
 
-    TLorentzVector p;
-    p.SetPtEtaPhiM( pt_pfCand[i], eta_pfCand[i], phi_pfCand[i], mass_pfCand[i] );
+    int ieta = h2_pfEtaPhi->GetXaxis()->FindBin( eta_pfCand[i] );
+    int iphi = h2_pfEtaPhi->GetYaxis()->FindBin( phi_pfCand[i] );
 
-    int ieta = h2_pfEtaPhi->GetXaxis()->FindBin( p.Eta() );
-    int iphi = h2_pfEtaPhi->GetYaxis()->FindBin( p.Phi() );
+    h2_pfEtaPhi->SetBinContent( ieta, iphi, energy_pfCand[i] );
 
-    h2_pfEtaPhi->SetBinContent( ieta, iphi, p.Energy() );
+  }
+
+
+
+
+  TH2D* h2_ctEtaPhi = new TH2D( "ctEtaPhi", "",  60, -3., 3., 63, -3.1416, 3.1416 );
+  h2_ctEtaPhi->SetXTitle( "Eta" );
+  h2_ctEtaPhi->SetYTitle( "Phi" );
+  
+
+  for( int i=0; i<nCaloTower; ++i ) {
+
+    int ieta = h2_ctEtaPhi->GetXaxis()->FindBin( eta_caloTower[i] );
+    int iphi = h2_ctEtaPhi->GetYaxis()->FindBin( phi_caloTower[i] );
+
+    h2_ctEtaPhi->SetBinContent( ieta, iphi, energy_caloTower[i] );
+
 
   }
 
@@ -59,6 +88,7 @@ int main( int argc, char* argv[] ) {
   outfile->cd();
 
   h2_pfEtaPhi->Write();
+  h2_ctEtaPhi->Write();
 
   outfile->Close();
 
