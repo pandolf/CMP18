@@ -105,17 +105,16 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    iEvent.getByLabel( "reducedEcalRecHitsEB", ebReducedRecHitCollection_h);
    const EcalRecHitCollection* ebRecHits = ebReducedRecHitCollection_h.product();
 
+   Handle< PFCandidateCollection > pfCandidateCollection_h;
+   iEvent.getByLabel( "particleFlow", pfCandidateCollection_h);
+   const PFCandidateCollection* pfCands = pfCandidateCollection_h.product();
+
 
    //edm::EDGetTokenT<edm::View<reco::Candidate> > pfCandidatesToken_;
    //pfCandidatesToken_        = mayConsume< edm::View<reco::Candidate> >(iConfig.getParameter<edm::InputTag>("pfCandidates")); 
    //edm::Handle< edm::View<reco::Candidate> > pfCandidatesHandle;
    //iEvent.getByToken(pfCandidatesToken_, pfCandidatesHandle);
 
-
-   // initialize:
-   for( int i=0; i<NECALRECHITMAX; ++i ) {
-     energy_ecalRecHit[i] = 0.;
-   }
 
 
    event =   (int) iEvent.id().event();
@@ -192,24 +191,84 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   
 
 
-  nEcalRecHit = ebRecHits->size();
 
-  int irechit_ind=0;
+   // BEGIN EB RECHITS ----------------------------------------
 
-  for( EcalRecHitCollection::const_iterator iRecHit = ebRecHits->begin(); iRecHit != ebRecHits->end(); ++iRecHit ) {
+   // initialize:
+   for( int i=0; i<NECALRECHITMAX; ++i ) {
+     energy_ecalRecHit[i] = 0.;
+   }
 
-    EBDetId edDetId(iRecHit->id());
-    
-    iEta_ecalRecHit[irechit_ind] = edDetId.ieta();
-    iPhi_ecalRecHit[irechit_ind] = edDetId.iphi();
-    energy_ecalRecHit[irechit_ind] = iRecHit->energy();
+   nEcalRecHit = ebRecHits->size();
+ 
+   int irechit_ind=0;
+ 
+   for( EcalRecHitCollection::const_iterator iRecHit = ebRecHits->begin(); iRecHit != ebRecHits->end(); ++iRecHit ) {
+ 
+     EBDetId edDetId(iRecHit->id());
+     
+     iEta_ecalRecHit[irechit_ind] = edDetId.ieta();
+     iPhi_ecalRecHit[irechit_ind] = edDetId.iphi();
+     energy_ecalRecHit[irechit_ind] = iRecHit->energy();
+ 
+     irechit_ind++;
+ 
+   }  // for recHits
+ 
+ 
+ 
+   // BEGIN PF CANDIDATES -------------------------------------
 
-    irechit_ind++;
+   for( int i=0; i<NPFCANDMAX; ++i ) {
+     pt_pfCand[i] = 0.;
+     eta_pfCand[i] = 0.;
+     phi_pfCand[i] = 0.;
+     mass_pfCand[i] = 0.;
+     pdgId_pfCand[i] = 0;
+   }
 
-  }  // for recHits
 
 
-  tree->Fill();
+ 
+   int iCand_ind = 0;
+ 
+   for( PFCandidateCollection::const_iterator iCand=pfCands->begin(); iCand!=pfCands->end(); ++iCand ) {
+ 
+     if( fabs(iCand->eta())<2.5 ) { //&& iCand->pdgId()!=0 ) {
+ 
+       float mass = -1.;
+
+       if( abs(iCand->pdgId())==22 )
+         mass = 0.;
+       else if( abs(iCand->pdgId())==130 ) 
+         mass = 0.497648;
+       else if( abs(iCand->pdgId())==13 || abs(iCand->pdgId())==11 || abs(iCand->pdgId())==211 )
+         mass = (float)(iCand->mass());
+       else {
+         std::cout << "Unknown PDG ID: " << iCand->pdgId() << std::endl;
+         continue;
+       }
+
+
+       if( mass >= 0. ) {
+      
+         pt_pfCand   [iCand_ind] = (float)(iCand->pt());
+         eta_pfCand  [iCand_ind] = (float)(iCand->eta());
+         phi_pfCand  [iCand_ind] = (float)(iCand->phi());
+         pdgId_pfCand[iCand_ind] = (int)  (iCand->pdgId());
+         mass_pfCand [iCand_ind] = mass;
+ 
+         iCand_ind++;
+ 
+       } // if mass ok
+ 
+     } // if eta 2.5
+     
+   } // for pf cands
+ 
+   nPFCand = iCand_ind;
+ 
+   tree->Fill();
 
 }
 
@@ -289,7 +348,7 @@ CODAnalyzer::beginJob()
 {
 
 
-  tree = fs->make<TTree>("CODAnalyzer","CODAnalyzer");
+  tree = fs->make<TTree>("codtree","");
   tree->Branch("event" , &event, "event/I");
   tree->Branch("run"   , &run  , "run/I");
   tree->Branch("lumi"  , &lumi , "lumi /I");
@@ -356,6 +415,13 @@ CODAnalyzer::beginJob()
   tree->Branch("iPhi_ecalRecHit" , iPhi_ecalRecHit , "iPhi_ecalRecHit[nEcalRecHit]/I");
   tree->Branch("iEta_ecalRecHit" , iEta_ecalRecHit , "iEta_ecalRecHit[nEcalRecHit]/I");
   tree->Branch("energy_ecalRecHit" , energy_ecalRecHit , "energy_ecalRecHit[nEcalRecHit]/F");
+
+  tree->Branch("nPFCand" , &nPFCand , "nPFCand/I");
+  tree->Branch("pt_pfCand" , pt_pfCand , "pt_pfCand[nPFCand]/F");
+  tree->Branch("eta_pfCand" , eta_pfCand , "eta_pfCand[nPFCand]/F");
+  tree->Branch("phi_pfCand" , phi_pfCand , "phi_pfCand[nPFCand]/F");
+  tree->Branch("mass_pfCand" , mass_pfCand , "mass_pfCand[nPFCand]/F");
+  tree->Branch("pdgId_pfCand" , pdgId_pfCand , "pdgId_pfCand[nPFCand]/I");
 
 
 }
