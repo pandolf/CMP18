@@ -105,8 +105,6 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    iEvent.getByLabel( "reducedEcalRecHitsEB", ebReducedRecHitCollection_h);
    const EcalRecHitCollection* ebRecHits = ebReducedRecHitCollection_h.product();
 
-   //edm::EDGetTokenT<EcalRecHitCollection> ebReducedRecHitCollection_;
-   //ebReducedRecHitCollection_        = mayConsume<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>
 
    //edm::EDGetTokenT<edm::View<reco::Candidate> > pfCandidatesToken_;
    //pfCandidatesToken_        = mayConsume< edm::View<reco::Candidate> >(iConfig.getParameter<edm::InputTag>("pfCandidates")); 
@@ -196,24 +194,21 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   nEcalRecHit = ebRecHits->size();
 
-  //int irechit_ind=0;
+  int irechit_ind=0;
 
-  //for( EcalRecHitCollection::const_iterator iRecHit = ebRecHits->begin(); iRecHit != ebRecHits->end(); ++iRecHit ) {
+  for( EcalRecHitCollection::const_iterator iRecHit = ebRecHits->begin(); iRecHit != ebRecHits->end(); ++iRecHit ) {
 
-  //  //std::cout << "rawid: " << iRecHit->id().rawId() << " det: " << iRecHit->id().det() << " subdetId: " << iRecHit->id().subdetId() << " energy: " << iRecHit->energy() << std::endl;
-  //  EBDetId edDetId(iRecHit->id());
-  //  
-  //  //iEta_ecalRecHit[irechit_ind] = edDetId.ieta();
-  //  //iPhi_ecalRecHit[irechit_ind] = edDetId.iphi();
-  //  //energy_ecalRecHit[irechit_ind] = iRecHit->energy();
+    EBDetId edDetId(iRecHit->id());
+    
+    iEta_ecalRecHit[irechit_ind] = edDetId.ieta();
+    iPhi_ecalRecHit[irechit_ind] = edDetId.iphi();
+    energy_ecalRecHit[irechit_ind] = iRecHit->energy();
 
-  //  std::cout << irechit_ind << std::endl;
-  //  irechit_ind++;
-  //  //std::cout << "iEta: " << edDetId.ieta() << " energy: " << iRecHit->energy() << std::endl;
+    irechit_ind++;
 
-  //}  // for recHits
+  }  // for recHits
 
-std::cout << "jjj3" << std::endl;
+
   tree->Fill();
 
 }
@@ -358,8 +353,8 @@ CODAnalyzer::beginJob()
   tree->Branch("hasPixelSeed_phot" , hasPixelSeed_phot , "hasPixelSeed_phot[nPhoton]/O");
 
   tree->Branch("nEcalRecHit" , &nEcalRecHit , "nEcalRecHit/I");
-  //tree->Branch("iPhi_ecalRecHit" , iPhi_ecalRecHit , "iPhi_ecalRecHit[nEcalRecHit]/I");
-  //tree->Branch("iEta_ecalRecHit" , iEta_ecalRecHit , "iEta_ecalRecHit[nEcalRecHit]/I");
+  tree->Branch("iPhi_ecalRecHit" , iPhi_ecalRecHit , "iPhi_ecalRecHit[nEcalRecHit]/I");
+  tree->Branch("iEta_ecalRecHit" , iEta_ecalRecHit , "iEta_ecalRecHit[nEcalRecHit]/I");
   tree->Branch("energy_ecalRecHit" , energy_ecalRecHit , "energy_ecalRecHit[nEcalRecHit]/F");
 
 

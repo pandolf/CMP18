@@ -76,7 +76,7 @@ class CODAnalyzer : public edm::EDAnalyzer {
       float rho;
       int event, run, lumi, nVert, nPU;
 
-      float nEcalRecHit;
+      int nEcalRecHit;
       int iEta_ecalRecHit[NECALRECHITMAX];
       int iPhi_ecalRecHit[NECALRECHITMAX];
       float energy_ecalRecHit[NECALRECHITMAX];
