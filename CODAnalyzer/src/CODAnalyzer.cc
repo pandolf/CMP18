@@ -113,11 +113,10 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    iEvent.getByLabel( "towerMaker", caloTowerCollection_h);
    const CaloTowerCollection* caloTowers = caloTowerCollection_h.product();
  
-   //edm::EDGetTokenT<edm::View<reco::Candidate> > pfCandidatesToken_;
-   //pfCandidatesToken_        = mayConsume< edm::View<reco::Candidate> >(iConfig.getParameter<edm::InputTag>("pfCandidates")); 
-   //edm::Handle< edm::View<reco::Candidate> > pfCandidatesHandle;
-   //iEvent.getByToken(pfCandidatesToken_, pfCandidatesHandle);
-
+   Handle< GenParticleCollection > GenParticleCollection_h;
+   iEvent.getByLabel( "genParticles", GenParticleCollection_h);
+   const GenParticleCollection* genParticles = GenParticleCollection_h.product();
+ 
 
 
    event =   (int) iEvent.id().event();
@@ -128,7 +127,38 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    nVert = vertexCollection->size();
    nPU   = getPileUp(pupInfo);
 
+   
+   
+   
+   
+   
+   // BEGIN GENPARTICLES -------------------------------------
 
+   int iGenPart_ind = 0;
+
+   for( GenParticleCollection::const_iterator iGenPart = genParticles->begin(); iGenPart!=genParticles->end(); ++iGenPart ) {
+
+     if( iGenPart->status()==3 ) {
+
+       pt_genPart   [iGenPart_ind] = (float)(iGenPart->pt());
+       eta_genPart  [iGenPart_ind] = (float)(iGenPart->eta());
+       phi_genPart  [iGenPart_ind] = (float)(iGenPart->phi());
+       mass_genPart [iGenPart_ind] = (float)(iGenPart->mass());
+       pdgId_genPart[iGenPart_ind] = (float)(iGenPart->pdgId());
+
+       iGenPart_ind++;
+
+     } // if status 3
+
+   } // for genparticles
+
+   nGenPart = iGenPart_ind;
+
+
+
+
+
+   // BEGIN PHOTONS -------------------------------------
 
    nPhoton = photons->size();
 
@@ -384,6 +414,13 @@ CODAnalyzer::beginJob()
   tree->Branch("rho"   , &rho  , "rho/F");
   tree->Branch("nVert" , &nVert, "nVert/I");
   tree->Branch("nPU"   , &nPU  , "nPU/I");
+
+  tree->Branch("nGenPart" , &nGenPart , "nGenPart/I");
+  tree->Branch("pt_genPart" , pt_genPart , "pt_genPart[nGenPart]/F");
+  tree->Branch("eta_genPart" , eta_genPart , "eta_genPart[nGenPart]/F");
+  tree->Branch("phi_genPart" , phi_genPart , "phi_genPart[nGenPart]/F");
+  tree->Branch("mass_genPart" , mass_genPart , "mass_genPart[nGenPart]/F");
+  tree->Branch("pdgId_genPart" , pdgId_genPart , "pdgId_genPart[nGenPart]/I");
 
   tree->Branch("nPhoton"  , &nPhoton , "nPhoton/I" );
   tree->Branch("pt_phot"  , pt_phot  , "pt_phot[nPhoton]/F");

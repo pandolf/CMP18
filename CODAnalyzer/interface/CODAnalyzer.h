@@ -31,10 +31,10 @@
 
 
 #define NPHOTONMAX 6
-#define NPARTONMAX 10
-#define NPFCANDMAX 2000
+#define NGENPARTMAX 20
+#define NPFCANDMAX 4000
 #define NCALOTOWERMAX 4000
-#define NECALRECHITMAX 2000
+#define NECALRECHITMAX 4000
 
 
 class TTree;
@@ -138,12 +138,12 @@ class CODAnalyzer : public edm::EDAnalyzer {
       bool hasPixelSeed_phot  [NPHOTONMAX];
 
 
-      int nParton;
-      float pt_parton   [NPARTONMAX];
-      float eta_parton  [NPARTONMAX];
-      float phi_parton  [NPARTONMAX];
-      float mass_parton [NPARTONMAX];
-      int   pdgId_parton[NPARTONMAX];
+      int nGenPart;
+      float pt_genPart   [NGENPARTMAX];
+      float eta_genPart  [NGENPARTMAX];
+      float phi_genPart  [NGENPARTMAX];
+      float mass_genPart [NGENPARTMAX];
+      int   pdgId_genPart[NGENPARTMAX];
    
 
       int nPFCand;
