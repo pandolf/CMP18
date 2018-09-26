@@ -83,11 +83,12 @@ class CODAnalyzer : public edm::EDAnalyzer {
 
 
       int nPhoton;
-      float pt_phot  [NPHOTONMAX];
-      float eta_phot [NPHOTONMAX];
-      float phi_phot [NPHOTONMAX];
-      float eRaw_phot[NPHOTONMAX];
-      float eSC_phot [NPHOTONMAX];
+      float pt_phot    [NPHOTONMAX];
+      float eta_phot   [NPHOTONMAX];
+      float phi_phot   [NPHOTONMAX];
+      float energy_phot[NPHOTONMAX];
+      float eRaw_phot  [NPHOTONMAX];
+      float eSC_phot   [NPHOTONMAX];
 
       float e1x5_phot[NPHOTONMAX];
       float e2x5_phot[NPHOTONMAX];
@@ -139,25 +140,27 @@ class CODAnalyzer : public edm::EDAnalyzer {
 
 
       int nGenPart;
-      float pt_genPart   [NGENPARTMAX];
-      float eta_genPart  [NGENPARTMAX];
-      float phi_genPart  [NGENPARTMAX];
-      float mass_genPart [NGENPARTMAX];
-      int   pdgId_genPart[NGENPARTMAX];
+      float pt_genPart    [NGENPARTMAX];
+      float eta_genPart   [NGENPARTMAX];
+      float phi_genPart   [NGENPARTMAX];
+      float energy_genPart[NGENPARTMAX];
+      float mass_genPart  [NGENPARTMAX];
+      int   pdgId_genPart [NGENPARTMAX];
    
 
       int nPFCand;
-      float pt_pfCand   [NPFCANDMAX];
-      float eta_pfCand  [NPFCANDMAX];
-      float phi_pfCand  [NPFCANDMAX];
-      float mass_pfCand [NPFCANDMAX];
-      int   pdgId_pfCand[NPFCANDMAX];
+      float pt_pfCand    [NPFCANDMAX];
+      float eta_pfCand   [NPFCANDMAX];
+      float phi_pfCand   [NPFCANDMAX];
+      float energy_pfCand[NPFCANDMAX];
+      float mass_pfCand  [NPFCANDMAX];
+      int   pdgId_pfCand [NPFCANDMAX];
 
       int nCaloTower;
-      float pt_caloTower   [NCALOTOWERMAX];
-      float eta_caloTower  [NCALOTOWERMAX];
-      float phi_caloTower  [NCALOTOWERMAX];
-      float mass_caloTower [NCALOTOWERMAX];
+      float pt_caloTower    [NCALOTOWERMAX];
+      float eta_caloTower   [NCALOTOWERMAX];
+      float phi_caloTower   [NCALOTOWERMAX];
+      float mass_caloTower  [NCALOTOWERMAX];
 
       float energy_caloTower      [NCALOTOWERMAX];
       float emEnergy_caloTower    [NCALOTOWERMAX];

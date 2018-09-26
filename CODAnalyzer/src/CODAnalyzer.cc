@@ -140,11 +140,12 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
      if( iGenPart->status()==3 ) {
 
-       pt_genPart   [iGenPart_ind] = (float)(iGenPart->pt());
-       eta_genPart  [iGenPart_ind] = (float)(iGenPart->eta());
-       phi_genPart  [iGenPart_ind] = (float)(iGenPart->phi());
-       mass_genPart [iGenPart_ind] = (float)(iGenPart->mass());
-       pdgId_genPart[iGenPart_ind] = (float)(iGenPart->pdgId());
+       pt_genPart    [iGenPart_ind] = (float)(iGenPart->pt());
+       eta_genPart   [iGenPart_ind] = (float)(iGenPart->eta());
+       phi_genPart   [iGenPart_ind] = (float)(iGenPart->phi());
+       energy_genPart[iGenPart_ind] = (float)(iGenPart->energy());
+       mass_genPart  [iGenPart_ind] = (float)(iGenPart->mass());
+       pdgId_genPart [iGenPart_ind] = (float)(iGenPart->pdgId());
 
        iGenPart_ind++;
 
@@ -164,11 +165,12 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
    for( int iPhot=0; iPhot<nPhoton; ++iPhot ) {
 
-      pt_phot  [iPhot] = photons->at(iPhot).pt();
-      eta_phot [iPhot] = photons->at(iPhot).eta();
-      phi_phot [iPhot] = photons->at(iPhot).phi();
-      eRaw_phot[iPhot] = photons->at(iPhot).superCluster()->rawEnergy();
-      eSC_phot [iPhot] = photons->at(iPhot).superCluster()->energy();
+      pt_phot    [iPhot] = photons->at(iPhot).pt();
+      eta_phot   [iPhot] = photons->at(iPhot).eta();
+      phi_phot   [iPhot] = photons->at(iPhot).phi();
+      energy_phot[iPhot] = photons->at(iPhot).energy();
+      eRaw_phot  [iPhot] = photons->at(iPhot).superCluster()->rawEnergy();
+      eSC_phot   [iPhot] = photons->at(iPhot).superCluster()->energy();
 
       e1x5_phot[iPhot] = photons->at(iPhot).e1x5();
       e2x5_phot[iPhot] = photons->at(iPhot).e2x5();
@@ -285,11 +287,12 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
        if( mass >= 0. ) {
       
-         pt_pfCand   [iCand_ind] = (float)(iCand->pt());
-         eta_pfCand  [iCand_ind] = (float)(iCand->eta());
-         phi_pfCand  [iCand_ind] = (float)(iCand->phi());
-         pdgId_pfCand[iCand_ind] = (int)  (iCand->pdgId());
-         mass_pfCand [iCand_ind] = mass;
+         pt_pfCand    [iCand_ind] = (float)(iCand->pt());
+         eta_pfCand   [iCand_ind] = (float)(iCand->eta());
+         phi_pfCand   [iCand_ind] = (float)(iCand->phi());
+         energy_pfCand[iCand_ind] = (float)(iCand->energy());
+         pdgId_pfCand [iCand_ind] = (int)  (iCand->pdgId());
+         mass_pfCand  [iCand_ind] = mass;
  
          iCand_ind++;
  
@@ -309,10 +312,10 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
    for( CaloTowerCollection::const_iterator iCaloTower=caloTowers->begin(); iCaloTower!=caloTowers->end(); iCaloTower++ ) {
 
-     pt_caloTower   [iCaloTower_ind] = (float)(iCaloTower->pt());
-     eta_caloTower  [iCaloTower_ind] = (float)(iCaloTower->eta());
-     phi_caloTower  [iCaloTower_ind] = (float)(iCaloTower->phi());
-     mass_caloTower [iCaloTower_ind] = (float)(iCaloTower->mass());
+     pt_caloTower    [iCaloTower_ind] = (float)(iCaloTower->pt());
+     eta_caloTower   [iCaloTower_ind] = (float)(iCaloTower->eta());
+     phi_caloTower   [iCaloTower_ind] = (float)(iCaloTower->phi());
+     mass_caloTower  [iCaloTower_ind] = (float)(iCaloTower->mass());
 
      energy_caloTower      [iCaloTower_ind] = (float)(iCaloTower->energy());
      emEnergy_caloTower    [iCaloTower_ind] = (float)(iCaloTower->emEnergy());
@@ -419,6 +422,7 @@ CODAnalyzer::beginJob()
   tree->Branch("pt_genPart" , pt_genPart , "pt_genPart[nGenPart]/F");
   tree->Branch("eta_genPart" , eta_genPart , "eta_genPart[nGenPart]/F");
   tree->Branch("phi_genPart" , phi_genPart , "phi_genPart[nGenPart]/F");
+  tree->Branch("energy_genPart" , energy_genPart , "energy_genPart[nGenPart]/F");
   tree->Branch("mass_genPart" , mass_genPart , "mass_genPart[nGenPart]/F");
   tree->Branch("pdgId_genPart" , pdgId_genPart , "pdgId_genPart[nGenPart]/I");
 
@@ -426,6 +430,7 @@ CODAnalyzer::beginJob()
   tree->Branch("pt_phot"  , pt_phot  , "pt_phot[nPhoton]/F");
   tree->Branch("eta_phot" , eta_phot , "eta_phot[nPhoton]/F");
   tree->Branch("phi_phot" , phi_phot , "phi_phot[nPhoton]/F");
+  tree->Branch("energy_phot" , energy_phot , "energy_phot[nPhoton]/F");
   tree->Branch("eRaw_phot", eRaw_phot, "eRaw_phot[nPhoton]/F");
   tree->Branch("eSC_phot" , eSC_phot , "eSC_phot[nPhoton]/F");
 
