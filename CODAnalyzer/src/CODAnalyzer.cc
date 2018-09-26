@@ -284,6 +284,11 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
      phi_caloTower  [iCaloTower_ind] = (float)(iCaloTower->phi());
      mass_caloTower [iCaloTower_ind] = (float)(iCaloTower->mass());
 
+     energy_caloTower      [iCaloTower_ind] = (float)(iCaloTower->energy());
+     emEnergy_caloTower    [iCaloTower_ind] = (float)(iCaloTower->emEnergy());
+     hadEnergy_caloTower   [iCaloTower_ind] = (float)(iCaloTower->hadEnergy());
+     outerEnergy_caloTower [iCaloTower_ind] = (float)(iCaloTower->outerEnergy());
+
      iCaloTower_ind++;
 
    } // for calotowers
@@ -452,6 +457,10 @@ CODAnalyzer::beginJob()
   tree->Branch("eta_caloTower" , eta_caloTower , "eta_caloTower[nCaloTower]/F");
   tree->Branch("phi_caloTower" , phi_caloTower , "phi_caloTower[nCaloTower]/F");
   tree->Branch("mass_caloTower" , mass_caloTower , "mass_caloTower[nCaloTower]/F");
+  tree->Branch("energy_caloTower" , energy_caloTower , "energy_caloTower[nCaloTower]/F");
+  tree->Branch("emEnergy_caloTower" , emEnergy_caloTower , "emEnergy_caloTower[nCaloTower]/F");
+  tree->Branch("hadEnergy_caloTower" , hadEnergy_caloTower , "hadEnergy_caloTower[nCaloTower]/F");
+  tree->Branch("outerEnergy_caloTower" , outerEnergy_caloTower , "outerEnergy_caloTower[nCaloTower]/F");
 
 }
 

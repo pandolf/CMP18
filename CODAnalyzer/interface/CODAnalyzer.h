@@ -158,7 +158,11 @@ class CODAnalyzer : public edm::EDAnalyzer {
       float eta_caloTower  [NCALOTOWERMAX];
       float phi_caloTower  [NCALOTOWERMAX];
       float mass_caloTower [NCALOTOWERMAX];
-      float emf_caloTower  [NCALOTOWERMAX];
+
+      float energy_caloTower      [NCALOTOWERMAX];
+      float emEnergy_caloTower    [NCALOTOWERMAX];
+      float hadEnergy_caloTower   [NCALOTOWERMAX];
+      float outerEnergy_caloTower [NCALOTOWERMAX];
 
 
 
