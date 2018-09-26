@@ -109,7 +109,10 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    iEvent.getByLabel( "particleFlow", pfCandidateCollection_h);
    const PFCandidateCollection* pfCands = pfCandidateCollection_h.product();
 
-
+   Handle< CaloTowerCollection > caloTowerCollection_h;
+   iEvent.getByLabel( "towerMaker", caloTowerCollection_h);
+   const CaloTowerCollection* caloTowers = caloTowerCollection_h.product();
+ 
    //edm::EDGetTokenT<edm::View<reco::Candidate> > pfCandidatesToken_;
    //pfCandidatesToken_        = mayConsume< edm::View<reco::Candidate> >(iConfig.getParameter<edm::InputTag>("pfCandidates")); 
    //edm::Handle< edm::View<reco::Candidate> > pfCandidatesHandle;
@@ -267,7 +270,28 @@ CODAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    } // for pf cands
  
    nPFCand = iCand_ind;
- 
+
+
+
+   // BEGIN CALOTOWERS -------------------------------
+
+   int iCaloTower_ind = 0;
+
+   for( CaloTowerCollection::const_iterator iCaloTower=caloTowers->begin(); iCaloTower!=caloTowers->end(); iCaloTower++ ) {
+
+     pt_caloTower   [iCaloTower_ind] = (float)(iCaloTower->pt());
+     eta_caloTower  [iCaloTower_ind] = (float)(iCaloTower->eta());
+     phi_caloTower  [iCaloTower_ind] = (float)(iCaloTower->phi());
+     mass_caloTower [iCaloTower_ind] = (float)(iCaloTower->mass());
+
+     iCaloTower_ind++;
+
+   } // for calotowers
+
+   nCaloTower = iCaloTower_ind;
+
+
+
    tree->Fill();
 
 }
@@ -423,6 +447,11 @@ CODAnalyzer::beginJob()
   tree->Branch("mass_pfCand" , mass_pfCand , "mass_pfCand[nPFCand]/F");
   tree->Branch("pdgId_pfCand" , pdgId_pfCand , "pdgId_pfCand[nPFCand]/I");
 
+  tree->Branch("nCaloTower" , &nCaloTower , "nCaloTower/I");
+  tree->Branch("pt_caloTower" , pt_caloTower , "pt_caloTower[nCaloTower]/F");
+  tree->Branch("eta_caloTower" , eta_caloTower , "eta_caloTower[nCaloTower]/F");
+  tree->Branch("phi_caloTower" , phi_caloTower , "phi_caloTower[nCaloTower]/F");
+  tree->Branch("mass_caloTower" , mass_caloTower , "mass_caloTower[nCaloTower]/F");
 
 }
 
