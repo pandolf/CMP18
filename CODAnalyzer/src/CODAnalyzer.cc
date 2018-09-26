@@ -491,6 +491,7 @@ CODAnalyzer::beginJob()
   tree->Branch("pt_pfCand" , pt_pfCand , "pt_pfCand[nPFCand]/F");
   tree->Branch("eta_pfCand" , eta_pfCand , "eta_pfCand[nPFCand]/F");
   tree->Branch("phi_pfCand" , phi_pfCand , "phi_pfCand[nPFCand]/F");
+  tree->Branch("energy_pfCand" , energy_pfCand , "energy_pfCand[nPFCand]/F");
   tree->Branch("mass_pfCand" , mass_pfCand , "mass_pfCand[nPFCand]/F");
   tree->Branch("pdgId_pfCand" , pdgId_pfCand , "pdgId_pfCand[nPFCand]/I");
 
